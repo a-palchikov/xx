@@ -78,6 +78,19 @@ for p in ${packages2}; do
   set -- "$@" "$n"
 done
 
+# qemu-invoker is a simple tool that wraps the qemu-user-static
+# for the target architecture to execute specific binaries during
+# xx-dnf install. This is necessary as many fedora packages are using
+# scriptlets which call into bash.
+# In order to enable this (and bash seems to be enough), we run bash
+# under qemu emulation.
+setup_qemu_invoker() {
+  # this assumes bash has already been installed with `xx-dnf install bash`
+  cp /usr/bin/qemu-$(xx-info rhel-arch)-static /"${XX_TRIPLE}"/usr/bin/
+  mv /"${XX_TRIPLE}"/usr/bin/sh /"${XX_TRIPLE}"/usr/bin/sh-orig
+  cp /usr/bin/qemu-invoker /"${XX_TRIPLE}"/usr/bin/sh
+}
+
 setup() {
   if ! xx-info is-cross; then
     return
@@ -168,6 +181,9 @@ cmd() {
 case "$1" in
   "setup")
     setup
+    ;;
+  "setup_qemu_invoker")
+    setup_qemu_invoker
     ;;
   "clean")
     clean
