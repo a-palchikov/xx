@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+PS4='${LINENO}: '
+
 : "${LD_MIRRORS=}"
 : "${LD_SHAS=}"
 : "${LD64_SHAS=}"
@@ -39,6 +41,9 @@ installwget() {
   fi
   if command -v dnf >/dev/null 2>/dev/null; then
     dnf install wget >/dev/null 2>/dev/null
+  fi
+  if command -v yum >/dev/null 2>/dev/null; then
+    yum install -y wget >/dev/null 2>/dev/null
   fi
 }
 
@@ -467,7 +472,7 @@ export PKG_CONFIG_LIBDIR=/${target}/usr/lib/pkgconfig/
 exec pkg-config "\$@"
 EOT
       chmod +x "/usr/bin/${target}-pkg-config"
-    elif [ -f /etc/fedora-release ]; then
+    elif [[ -f /etc/fedora-release || -f /etc/centos-release ]]; then
       config="${config} --sysroot=/${target}/"
 
       if [ -n "$is_bfd" ]; then
@@ -546,7 +551,7 @@ EOT
     fi
   fi
 
-  if [ -f /etc/fedora-release ]; then
+  if [[ -f /etc/fedora-release || -f /etc/centos-release ]]; then
     # if vendor is not fedora then sysroot needs to be linked to the custom vendor
     fedoratriple=$(echo "$target" | sed s/-[[:alpha:]][[:alpha:]]*-/-fedora-/ | sed s/^riscv64gc-/riscv64-/)
     if [ "$target" != "$fedoratriple" ]; then
@@ -664,7 +669,7 @@ if [ -n "${printSysroot}" ]; then
   setup
 
   if xx-info is-cross; then
-    if [ -f "/etc/alpine-release" ] || [ -f "/etc/fedora-release" ]; then
+    if [[ -f "/etc/alpine-release" || -f "/etc/fedora-release" || -f "/etc/centos-release" ]]; then
       echo "/${target}/"
       exit 0
     fi

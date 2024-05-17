@@ -1,5 +1,5 @@
 variable "XX_REPO" {
-    default = "tonistiigi/xx"
+    default = "a-palchikov/xx"
 }
 
 variable "TEST_BASE_TYPE" {
@@ -130,19 +130,8 @@ group "default" {
 
 target "_all-platforms" {
     platforms = [
-        "linux/386",
         "linux/amd64",
         "linux/arm64",
-        "linux/arm/v5",
-        "linux/arm/v6",
-        "linux/arm/v7",
-        "linux/mips",
-        "linux/mipsle",
-        "linux/mips64",
-        "linux/mips64le",
-        "linux/ppc64le",
-        "linux/s390x",
-        "linux/riscv64"
     ]
 }
 
@@ -163,24 +152,8 @@ target "sdk-extras" {
     platforms = [
         "darwin/amd64",
         "darwin/arm64",
-        "freebsd/amd64",
-        "linux/386",
         "linux/amd64",
         "linux/arm64",
-        "linux/arm/v5",
-        "linux/arm/v6",
-        "linux/arm/v7",
-        "linux/mips",
-        "linux/mipsle",
-        "linux/mips64",
-        "linux/mips64le",
-        "linux/ppc64le",
-        "linux/riscv64",
-        "linux/s390x",
-        "windows/386",
-        "windows/amd64",
-        "windows/arm",
-        "windows/arm64"
     ]
 }
 
@@ -215,16 +188,8 @@ target "binutils" {
     inherits = ["_ld-base"]
     matrix = {
         tgt = [
-            "linux-386",
             "linux-amd64",
             "linux-arm64",
-            "linux-armv6",
-            "linux-armv7",
-            "linux-ppc64le",
-            "linux-riscv64",
-            "linux-s390x",
-            "windows-386",
-            "windows-amd64"
         ]
     }
     target = "binutils"
@@ -235,8 +200,6 @@ target "binutils" {
     platforms = [
         "linux/amd64",
         "linux/arm64",
-        "linux/arm",
-        "linux/s390x"
     ]
     cache-from = [join("", ["type=registry,ref=", binutilsTag(XX_REPO, BINUTILS_VERSION, BINUTILS_VERSION_ONLY, tgt)[0]])]
     cache-to = ["type=inline"]
@@ -251,10 +214,8 @@ target "ld64" {
 target "ld64-static-tgz" {
     inherits = ["ld64"]
     platforms = [
-        "linux/386",
         "linux/amd64",
         "linux/arm64",
-        "linux/arm/v7",
     ]
     output = ["./bin/ld-static-tgz"]
     target = "ld64-static-tgz"
@@ -265,16 +226,8 @@ target "ld-static-tgz" {
     inherits = ["_ld-base"]
     matrix = {
         tgt = [
-            "linux-386",
             "linux-amd64",
             "linux-arm64",
-            "linux-armv6",
-            "linux-armv7",
-            "linux-ppc64le",
-            "linux-riscv64",
-            "linux-s390x",
-            "windows-386",
-            "windows-amd64"
         ]
     }
     target = "ld-static-tgz"
@@ -283,13 +236,8 @@ target "ld-static-tgz" {
         LD_TARGET = tgt
     }
     platforms = [
-        "linux/386",
         "linux/amd64",
         "linux/arm64",
-        "linux/arm/v6",
-        "linux/arm/v7",
-        "linux/s390x",
-        "linux/ppc64le"
     ]
     cache-from = [join("", ["type=registry,ref=", binutilsTag(XX_REPO, BINUTILS_VERSION, "1", tgt)[0]])]
     cache-to = ["type=inline"]
@@ -347,7 +295,6 @@ target "lipo" {
     platforms = [
         "linux/amd64",
         "linux/arm64",
-        "linux/arm/v7",
     ]
 }
 
@@ -360,6 +307,5 @@ target "sigtool" {
     platforms = [
         "linux/amd64",
         "linux/arm64",
-        "linux/arm/v7",
     ]
 }

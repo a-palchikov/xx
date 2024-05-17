@@ -14,6 +14,7 @@ RUN ln -s xx-cc /out/xx-clang && \
 
 # xx builds the xx image
 FROM scratch AS xx
+LABEL org.opencontainers.image.source="https://github.com/a-palchikov/xx"
 COPY --from=build /out/ /usr/bin/
 
 FROM --platform=$BUILDPLATFORM tonistiigi/bats-assert AS bats-assert
@@ -110,4 +111,4 @@ COPY fixtures fixtures
 COPY *.bats test_helper.bash ./
 
 # default is alias to build xx image
-FROM xx as default
+FROM xx AS default
