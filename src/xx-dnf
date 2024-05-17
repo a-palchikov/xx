@@ -3,6 +3,7 @@
 set -e
 
 if [ -z "$XX_DNF_NOLOCK" ]; then
+  mkdir -p /var/lock
   lock="/var/lock/xx-dnf"
   exec 9>$lock
   flock -x 9

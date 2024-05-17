@@ -12,10 +12,19 @@ RUN ln -s xx-cc /out/xx-clang && \
     ln -s xx-cc /out/xx-c++ && \
     ln -s xx-apt /out/xx-apt-get
 
+FROM --platform=$BUILDPLATFORM golang:1.22-alpine AS build-tools
+WORKDIR /src
+COPY cmd cmd/
+COPY go.mod .
+RUN <<eof
+	go build -ldflags '-w -s' -o /qemu-invoker ./cmd/qemu-invoker/main.go
+eof
+
 # xx builds the xx image
 FROM scratch AS xx
 LABEL org.opencontainers.image.source="https://github.com/a-palchikov/xx"
 COPY --from=build /out/ /usr/bin/
+COPY --from=build-tools /qemu-invoker /usr/bin/
 
 FROM --platform=$BUILDPLATFORM tonistiigi/bats-assert AS bats-assert
 
